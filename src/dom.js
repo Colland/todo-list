@@ -112,6 +112,8 @@ function loadInitialPage()
     footerLinks.id = "footerLinks";
     footerLinks.innerHTML = "Built by <a href = \"https://github.com/Colland\">Colland</a> | <a href = \"https://github.com/Colland/todo-list\">Source code</a>";
     footer.appendChild(footerLinks);
+
+    changeToSmallScreenStyles(mediaQuery);
 }
 
 function fillAsideTop(logoSrc, asideText)
