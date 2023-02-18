@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,700,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script defer src="main.js"></script></head>
+<body>
+    <dialog id = "newProjectModal">
+        <div id = "newProjectModalContainer">
+            <div class = "modalHeader">
+                <h3 class =  "modalTitle">New Project</h3>
+                <img src="ca0a4a86df7a4feb6912.svg" alt = "close" id = "projectModalClose">
+            </div>
+            <form action="post" id = "newProjectForm">
+                <div class = "modalFormSection">
+                    <label for="projectModalNameInput">Project name</label>
+                    <input type="text" id = "projectModalNameInput" class = "newProjectFormInput" name = "projectName" required maxlength = "50">
+                </div>
+                <div class = "modalFormSection">
+                    <button type = "submit" class = "modalSubmit" id = "projectModalSubmit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+</body>
+</html>
