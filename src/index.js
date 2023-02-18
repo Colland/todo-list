@@ -20,3 +20,4 @@ export default Controller
 
 
 //TODO
+//Make it so when user adds a big project, it doesn't overflow the add task modal.

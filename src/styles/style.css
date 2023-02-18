@@ -386,6 +386,11 @@ main
     box-sizing: border-box;
 }
 
+.newTaskFormInput
+{
+    max-width: 300px;
+}
+
 .newTaskFormInput:focus
 {
     border: 1px solid rgb(55, 118, 255);
@@ -547,6 +552,8 @@ footer
     #mainTitle
     {
         font-size: 26px;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     #todoContainer
@@ -610,5 +617,22 @@ footer
     #footerLinks
     {
         font-size: 14px;
+    }
+
+    #newTaskModal
+    {
+        width: 290px;
+        height: 450px;
+    }
+
+    .modalTitle
+    {
+        font-size: 24px;
+    }
+
+    #newProjectModal
+    {
+        width: 300px;
+        height: 210px;
     }
 }
