@@ -25,5 +25,38 @@
             </form>
         </div>
     </dialog>
+
+    <dialog id = "newTaskModalNoProject">
+        <div id = "newTaskModalContainerNoProject">
+            <div class = "modalHeader">
+                <h3 class =  "modalTitle">New Task</h3>
+                <img src="ca0a4a86df7a4feb6912.svg" alt = "close" id = "newTaskCloseNoProject">
+            </div>
+            <form action="post" id = "newTaskFormNoProject">
+                <div class = "modalFormSection">
+                    <label for="newTaskNameInputNoProject">Task title</label>
+                    <input type="text" id = "newTaskNameInputNoProject" class = "newTaskFormInput" name = "task-title" required maxlength = "70" placeholder="E.g: Walk dog">
+                </div>
+
+                <div class = "modalFormSection">
+                    <label for="taskPriorityInputNoProject">Task priority</label>
+                    <select name="task-priority" id="taskPriorityInputNoProject" class = "newTaskFormInput">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class = "modalFormSection">
+                    <label for="taskDateInputNoProject">Deadline</label>
+                    <input type="date" class = "newTaskFormInput" name = "task-date" id = "taskDateInputNoProject" required>
+                </div>
+
+                <div class = "modalFormSection">
+                    <button type = "submit" class = "modalSubmit" id = "newTaskModalSubmitNoProject">Submit</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
 </body>
 </html>

@@ -104,6 +104,7 @@ function loadInitialPage()
     populateInbox();
     appendNewTaskButton();
     addProjectModalListeners();
+    addNewTaskModalNoProjectListeners();
 
     const footer = document.createElement("footer");
     pageContainer.appendChild(footer);
@@ -345,11 +346,12 @@ function appendNewTaskButton()
 
     if(currentPage == "Inbox" || currentPage == "Today" || currentPage == "Upcoming" || currentPage == "Important" || currentPage == "Completed")
     {
+        document.querySelector("#taskProjectLabel").classList.remove("new-task-project-error-check");
         newTask.addEventListener("click", () => document.querySelector("#newTaskModal").showModal());
     }
     else
     {
-        newTask.addEventListener("click", showModifiedNewTaskModal);
+        newTask.addEventListener("click", () => document.querySelector("#newTaskModalNoProject").showModal());
     }
 }
 
@@ -489,7 +491,6 @@ function addNewTaskModal()
 
     const newTaskModal = document.createElement("dialog");
     newTaskModal.id = "newTaskModal";
-    newTaskModal.addEventListener("close", () => document.querySelector("#taskProjectLabel").classList.remove("new-task-project-error-check"));
     pageContainer.appendChild(newTaskModal);
 
     const newTaskModalContainer = document.createElement("div");
@@ -646,6 +647,7 @@ function showModifiedNewTaskModal()
 {
     let taskModal = document.querySelector("#newTaskModal");
     taskModal.id = "newTaskModalNoProject";
+
     document.querySelector("#newTaskForm").id = "newTaskFormNoProject";
 
     document.querySelector("#taskProjectContainer").remove();
@@ -656,72 +658,53 @@ function newTaskSubmitted(e)
 {
     e.preventDefault();
 
-    let inputField = document.querySelectorAll(".newTaskFormInput");
+    //Only grabs the input fields of the current modal's form.
+    let inputField = document.querySelectorAll("#" + e.target.id + " .newTaskFormInput");
 
     let name = inputField[0].value;
     let priority = inputField[1].value;
     let date = inputField[2].value;
-    let project = inputField[3].value;
 
-    if(project == "")
+    if(currentPage == "Inbox" || currentPage == "Today" || currentPage == "Upcoming" || currentPage == "Important" || currentPage == "Completed")
     {
-        document.querySelector("#taskProjectLabel").classList.add("new-task-project-error-check");
-    }
-    else
-    {
-        if(currentPage == "Inbox" || currentPage == "Today" || currentPage == "Upcoming" || currentPage == "Important" || currentPage == "Completed")
+        let project = inputField[3].value;
+
+        if(project == "")
         {
-            let newTask = new Task(name, priority, date, project);
-            Controller.addNewTask(newTask);
-
-            document.querySelector("#newTaskForm").reset();
-            document.querySelector("#newTaskModal").close();
+            document.querySelector("#taskProjectLabel").classList.add("new-task-project-error-check");
         }
         else
         {
-            let newTask = new Task(name, priority, date, currentPage);
+            let newTask = new Task(name, priority, date, project);
             Controller.addNewTask(newTask);
-
-            let newTaskForm = document.querySelector("#newTaskFormNoProject")
-            let newTaskModal = document.querySelector("#newTaskModalNoProject")
-            newTaskForm.reset();
-            newTaskModal.close();
-
-            newTaskForm.id = "newTaskForm";
-            newTaskModal.id = "newTaskModal";
-
-            document.querySelector("#newTaskSubmitContainer").remove();
-
-            const taskProjectContainer = document.createElement("div");
-            taskProjectContainer.id = "taskProjectContainer";
-            taskProjectContainer.classList.add("modalFormSection");
-            newTaskForm.appendChild(taskProjectContainer);
-
-            const taskProjectLabel = document.createElement("label");
-            taskProjectLabel.textContent = "Project";
-            taskProjectLabel.htmlFor = "taskProjectInput";
-            taskProjectContainer.appendChild(taskProjectLabel);
-
-            const taskProjectInput = document.createElement("select");
-            taskProjectInput.name = "task-project";
-            taskProjectInput.id = "taskProjectInput";
-            taskProjectInput.classList.add("newTaskFormInput");
-            taskProjectContainer.appendChild(taskProjectInput);
-
-            const submitFormContainer = document.createElement("div");
-            submitFormContainer.classList.add("modalFormSection");
-            submitFormContainer.id = "newTaskSubmitContainer";
-            newTaskForm.appendChild(submitFormContainer);
-
-            const newTaskSubmit = document.createElement("button");
-            newTaskSubmit.type = "submit";
-            newTaskSubmit.textContent = "Submit";
-            newTaskSubmit.classList.add("modalSubmit");
-            submitFormContainer.appendChild(newTaskSubmit);
-
-            updateNewTaskModalProjects();
+    
+            document.querySelector("#newTaskForm").reset();
+            document.querySelector("#newTaskModal").close();
         }
     }
+    else
+    {
+        let newTask = new Task(name, priority, date, currentPage);
+        Controller.addNewTask(newTask);
+
+        let newTaskForm = document.querySelector("#newTaskFormNoProject")
+        let newTaskModal = document.querySelector("#newTaskModalNoProject")
+        newTaskForm.reset();
+        newTaskModal.close();
+
+        updateNewTaskModalProjects();
+    }
+}
+
+function addNewTaskModalNoProjectListeners()
+{
+    let newTaskForm = document.querySelector("#newTaskFormNoProject");
+    let closeButton = document.querySelector("#newTaskCloseNoProject");
+    let newTaskModal = document.querySelector("#newTaskModalNoProject");
+    
+    newTaskForm.addEventListener('submit', newTaskSubmitted);
+    closeButton.addEventListener('click', () => {newTaskForm.reset();
+                                                newTaskModal.close();});
 }
 
 function deleteTask()
@@ -807,6 +790,8 @@ function displayAside()
         aside.classList.add("small-screen-aside-visible");
         main.classList.add("small-screen-main-aside-visible");
         isHamburgerClicked = true;
+ 
+ 
     }
 }
 

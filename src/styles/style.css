@@ -338,7 +338,7 @@ main
     padding: 0; 
 }
 
-#newTaskModalContainer, #newProjectModalContainer
+#newTaskModalContainer, #newTaskModalContainerNoProject
 {
     display: grid;
     grid-template-rows: 1fr 5fr;
@@ -524,7 +524,7 @@ footer
         padding: 15px;
         position: relative;
         transform: translateY(-600px);
-        transition: 1s;
+        transition: 0.5s;
     }
 
     #asideTop
@@ -666,7 +666,7 @@ footer
 {
     display: grid;
     transform: translateY(0px);
-    transition: 1s;
+    transition: 0.5s;
 }
 
 .small-screen-main-aside-visible
