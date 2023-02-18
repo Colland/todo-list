@@ -13,15 +13,20 @@ import TrashIconRed from "./images/todo-trash-red.svg";
 import ProjectIcon from "./images/todo-project.svg";
 import FavoriteIcon from "./images/todo-favorite.svg";
 import FavoriteIconFilled from "./images/todo-favorite-filled.svg";
+import HamburgerIcon from "./images/todo-hamburger.svg";
 import Controller from "./index";
 import Task from "./Task";
 import Model from "./model";
 import { format, parseISO } from 'date-fns';
 
 let currentPage;
+let isHamburgerClicked = false;
 
 function loadInitialPage()
 {
+    const mediaQuery = window.matchMedia('(max-width: 600px)')
+    mediaQuery.addEventListener("change", changeToSmallScreenStyles);
+
     const pageContainer = document.createElement("div");
     pageContainer.id = "pageContainer";
     document.querySelector("body").append(pageContainer);
@@ -31,14 +36,24 @@ function loadInitialPage()
     const nav = document.createElement("nav");
     pageContainer.append(nav);
 
+    const hamburger = new Image();
+    hamburger.src = HamburgerIcon;
+    hamburger.classList.add("hamburger-icon");
+    hamburger.addEventListener("click", displayAside);
+    nav.appendChild(hamburger);
+
+    const navContainer = document.createElement("div");
+    navContainer.id = "navContainer";
+    nav.appendChild(navContainer);
+
     const pageLogo = new Image();
     pageLogo.src = Logo;
-    nav.appendChild(pageLogo);
+    navContainer.appendChild(pageLogo);
 
     const pageTitle = document.createElement("h1");
     pageTitle.id = "pageTitle";
     pageTitle.textContent = "TODO - A Simple Todo App";
-    nav.appendChild(pageTitle);
+    navContainer.appendChild(pageTitle);
 
     const aside = document.createElement("aside");
     pageContainer.appendChild(aside);
@@ -762,6 +777,34 @@ function updateFavorite()
     if(currentPage == "Important")
     {
         buildMainPage("Important");
+    }
+}
+
+function changeToSmallScreenStyles(e)
+{
+    if(e.matches)
+    {
+        let hamburger = document.querySelector(".hamburger-icon");
+        hamburger.classList.add("hamburger-icon-visible");
+    }
+}
+
+function displayAside()
+{
+    const aside = document.querySelector("aside");
+    const main = document.querySelector("main");
+
+    if(isHamburgerClicked)
+    {
+        aside.classList.remove("small-screen-aside-visible");
+        main.classList.remove("small-screen-main-aside-visible");
+        isHamburgerClicked = false;
+    }
+    else
+    {
+        aside.classList.add("small-screen-aside-visible");
+        main.classList.add("small-screen-main-aside-visible");
+        isHamburgerClicked = true;
     }
 }
 
