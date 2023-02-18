@@ -362,7 +362,7 @@ main
     color: #FFFFFF;
 }
 
-#closeButton
+#closeButton, #newTaskCloseNoProject
 {
     cursor: pointer;
 }
