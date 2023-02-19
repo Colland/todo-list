@@ -4094,6 +4094,16 @@ class Task
         this.completed = false;
         this.id = "id" + Math.random().toString(16).slice(2);
     }
+
+    toggleCompleted()
+    {
+        this.completed = !this.completed;
+    }
+
+    toggleFavorited()
+    {
+        this.favorited = !this.favorited;
+    }
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Task);
@@ -4483,11 +4493,25 @@ function appendNewTaskButton()
 
     if(currentPage == "Inbox" || currentPage == "Today" || currentPage == "Upcoming" || currentPage == "Important" || currentPage == "Completed")
     {
+        const taskDateInput = document.querySelector("#taskDateInput");
+
+        if(taskDateInput.disabled == true)
+        {
+            taskDateInput.disabled = false;
+        }
+
         document.querySelector("#taskProjectLabel").classList.remove("new-task-project-error-check");
-        newTask.addEventListener("click", () => document.querySelector("#newTaskModal").showModal());
+        newTask.addEventListener("click", displayNewTaskModal);
     }
     else
     {
+        const taskDateInput = document.querySelector("#taskDateInput");
+
+        if(taskDateInput.disabled == "true")
+        {
+            taskDateInput.disabled = "false";
+        }
+
         newTask.addEventListener("click", () => document.querySelector("#newTaskModalNoProject").showModal());
     }
 }
@@ -4619,6 +4643,11 @@ function checkOrUncheckTask()
         taskTitle.classList.add("taskFinished");
         taskCheck.textContent = "check_circle";
         _model__WEBPACK_IMPORTED_MODULE_18__["default"].checkOrUncheckTask(currentTask.dataset.taskID, currentTask.dataset.taskProject)
+    }
+
+    if(currentPage == "Completed")
+    {
+        buildMainPage("Completed");
     }
 }
 
@@ -4753,6 +4782,20 @@ function addNewTaskModal()
     submitFormContainer.appendChild(newTaskSubmit);
 }
 
+function displayNewTaskModal()
+{
+    let newTaskModal = document.querySelector("#newTaskModal");
+
+    if(currentPage == "Today")
+    {
+        let dateInput = document.querySelector("#taskDateInput")
+        dateInput.disabled = true;
+        dateInput.value = (0,date_fns__WEBPACK_IMPORTED_MODULE_19__["default"])(new Date(), "yyyy-MM-dd");
+    }
+
+    newTaskModal.showModal();
+}
+
 function updateNewTaskModalProjects()
 {
     let taskProjectInput = document.querySelector("#taskProjectInput");
@@ -4780,17 +4823,6 @@ function addProjectModalListeners()
     projectModalForm.addEventListener('submit', newProjectSubmitted)
 }
 
-function showModifiedNewTaskModal()
-{
-    let taskModal = document.querySelector("#newTaskModal");
-    taskModal.id = "newTaskModalNoProject";
-
-    document.querySelector("#newTaskForm").id = "newTaskFormNoProject";
-
-    document.querySelector("#taskProjectContainer").remove();
-    taskModal.showModal();
-}
-
 function newTaskSubmitted(e)
 {
     e.preventDefault();
@@ -4813,6 +4845,16 @@ function newTaskSubmitted(e)
         else
         {
             let newTask = new _Task__WEBPACK_IMPORTED_MODULE_17__["default"](name, priority, date, project);
+
+            if(currentPage == "Important")
+            {   
+                newTask.toggleFavorited();
+            }
+            else if(currentPage == "Completed")
+            {
+                newTask.toggleCompleted();
+            }
+
             _index__WEBPACK_IMPORTED_MODULE_16__["default"].addNewTask(newTask);
     
             document.querySelector("#newTaskForm").reset();
