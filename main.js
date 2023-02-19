@@ -4234,7 +4234,7 @@ function loadInitialPage()
     projectsAdd.addEventListener('click', () => document.querySelector("#newProjectModal").showModal());
     asideProjectsHeader.appendChild(projectsAdd);
 
-    createProjectTab("Default");
+    populateProjectTabs();
 
     const main = document.createElement("main");
     pageContainer.appendChild(main);
@@ -4288,6 +4288,17 @@ function fillAsideTop(logoSrc, asideText)
         asideTopButton.classList.add("asideButtonSelected");
     }
 }
+
+function populateProjectTabs()
+{
+    let projectsList = _model__WEBPACK_IMPORTED_MODULE_18__["default"].getProjectsList();
+
+    for(let i = 0; i < projectsList.length; i++)
+    {
+        createProjectTab(projectsList[i].name);
+    }
+}
+
 
 function createProjectTab(projectName)
 {
@@ -4990,10 +5001,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./model */ "./src/model.js");
 /* harmony import */ var _dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dom */ "./src/dom.js");
+/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Task */ "./src/Task.js");
+/* harmony import */ var _Project__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Project */ "./src/Project.js");
 
 
 
-_model__WEBPACK_IMPORTED_MODULE_0__["default"].populateDefaultProjects();
+
+
+if(localStorage.getItem("projectsList") === null)
+{
+    _model__WEBPACK_IMPORTED_MODULE_0__["default"].populateDefaultProjects();
+}
+else
+{
+    getProjectsListFromLocalStorage();
+}
+
 (0,_dom__WEBPACK_IMPORTED_MODULE_1__.loadInitialPage)();
 
 const Controller = (() => 
@@ -5007,6 +5030,31 @@ const Controller = (() =>
        addNewTask
     };
 })();
+
+function getProjectsListFromLocalStorage()
+{
+    let jsonOutput = JSON.parse(localStorage.getItem("projectsList"));
+    let projectsList = [];
+
+    jsonOutput.forEach((project) => projectsList.push((Object.assign(new _Project__WEBPACK_IMPORTED_MODULE_3__["default"](), project))));
+
+    for(let i = 0; i < projectsList.length; i++)
+    {
+        for(let k = 0; k < projectsList[i].taskList.length; k++)
+        {
+            projectsList[i].taskList[k] = Object.assign(new _Task__WEBPACK_IMPORTED_MODULE_2__["default"](), projectsList[i].taskList[k]);
+        }
+    } 
+
+    let projectsListMap = new Map();
+
+    for(let i = 0; i < projectsList.length; i++)
+    {
+        projectsListMap.set(projectsList[i].name, projectsList[i]);
+    }
+
+    _model__WEBPACK_IMPORTED_MODULE_0__["default"].setProjectsList(projectsListMap);
+}
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Controller);
 
@@ -5039,10 +5087,17 @@ const Model = (() =>
 {
     let projects = new Map();
 
+    function setProjectsList(projectsList)
+    {
+        projects = projectsList;
+    }
+
     function addNewProject(name)
     {
         projects.set(name, new _Project__WEBPACK_IMPORTED_MODULE_0__["default"](name));
         (0,_dom__WEBPACK_IMPORTED_MODULE_2__.createProjectTab)(name);
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function removeProject(name)
@@ -5050,12 +5105,16 @@ const Model = (() =>
         projects.delete(name);
         (0,_dom__WEBPACK_IMPORTED_MODULE_2__.updateTasksView)(name);
         (0,_dom__WEBPACK_IMPORTED_MODULE_2__.updateNewTaskModalProjects)();
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function addNewTask(task)
     {
         (projects.get(task.project)).addTask(task);
         (0,_dom__WEBPACK_IMPORTED_MODULE_2__.updateTasksView)(task.project);
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function removeTask(taskID, taskProject)
@@ -5072,6 +5131,7 @@ const Model = (() =>
         }
 
         (0,_dom__WEBPACK_IMPORTED_MODULE_2__.updateTasksView)(taskProject);
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function getTask(taskID, taskProject)
@@ -5103,12 +5163,16 @@ const Model = (() =>
     {
         let task = getTask(taskID, taskProject)
         task.completed = !task.completed;
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function toggleFavoriteTask(taskID, taskProject)
     {
         let task = getTask(taskID, taskProject);
         task.favorited = !task.favorited;
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function populateDefaultProjects()
@@ -5117,7 +5181,7 @@ const Model = (() =>
         let task2 = new _Task__WEBPACK_IMPORTED_MODULE_1__["default"]("Do laundry", "medium", "2023-02-13", "Default");
         let task3 = new _Task__WEBPACK_IMPORTED_MODULE_1__["default"]("Go to the gym", "medium", "2023-02-07", "Default");
         let task4 = new _Task__WEBPACK_IMPORTED_MODULE_1__["default"]("Finish Odin", "high", "2024-01-01", "Default");
-        projects.set("Default", new _Project__WEBPACK_IMPORTED_MODULE_0__["default"]("Default", [task1, task2, task3, task4]))
+        projects.set("Default", new _Project__WEBPACK_IMPORTED_MODULE_0__["default"]("Default", [task1, task2, task3, task4]));
     }
 
     function getProject(projectName)
@@ -5229,6 +5293,7 @@ const Model = (() =>
     }
 
     return{
+        setProjectsList,
         addNewTask,
         getTask,
         removeTask,
