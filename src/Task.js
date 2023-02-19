@@ -10,6 +10,16 @@ class Task
         this.completed = false;
         this.id = "id" + Math.random().toString(16).slice(2);
     }
+
+    toggleCompleted()
+    {
+        this.completed = !this.completed;
+    }
+
+    toggleFavorited()
+    {
+        this.favorited = !this.favorited;
+    }
 }
 
 export default Task;
