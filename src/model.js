@@ -7,10 +7,17 @@ const Model = (() =>
 {
     let projects = new Map();
 
+    function setProjectsList(projectsList)
+    {
+        projects = projectsList;
+    }
+
     function addNewProject(name)
     {
         projects.set(name, new Project(name));
         createProjectTab(name);
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function removeProject(name)
@@ -18,12 +25,16 @@ const Model = (() =>
         projects.delete(name);
         updateTasksView(name);
         updateNewTaskModalProjects();
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function addNewTask(task)
     {
         (projects.get(task.project)).addTask(task);
         updateTasksView(task.project);
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function removeTask(taskID, taskProject)
@@ -40,6 +51,7 @@ const Model = (() =>
         }
 
         updateTasksView(taskProject);
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function getTask(taskID, taskProject)
@@ -71,12 +83,16 @@ const Model = (() =>
     {
         let task = getTask(taskID, taskProject)
         task.completed = !task.completed;
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function toggleFavoriteTask(taskID, taskProject)
     {
         let task = getTask(taskID, taskProject);
         task.favorited = !task.favorited;
+
+        localStorage.setItem("projectsList", JSON.stringify(getProjectsList()));
     }
 
     function populateDefaultProjects()
@@ -85,7 +101,7 @@ const Model = (() =>
         let task2 = new Task("Do laundry", "medium", "2023-02-13", "Default");
         let task3 = new Task("Go to the gym", "medium", "2023-02-07", "Default");
         let task4 = new Task("Finish Odin", "high", "2024-01-01", "Default");
-        projects.set("Default", new Project("Default", [task1, task2, task3, task4]))
+        projects.set("Default", new Project("Default", [task1, task2, task3, task4]));
     }
 
     function getProject(projectName)
@@ -197,6 +213,7 @@ const Model = (() =>
     }
 
     return{
+        setProjectsList,
         addNewTask,
         getTask,
         removeTask,

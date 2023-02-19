@@ -87,7 +87,7 @@ function loadInitialPage()
     projectsAdd.addEventListener('click', () => document.querySelector("#newProjectModal").showModal());
     asideProjectsHeader.appendChild(projectsAdd);
 
-    createProjectTab("Default");
+    populateProjectTabs();
 
     const main = document.createElement("main");
     pageContainer.appendChild(main);
@@ -141,6 +141,17 @@ function fillAsideTop(logoSrc, asideText)
         asideTopButton.classList.add("asideButtonSelected");
     }
 }
+
+function populateProjectTabs()
+{
+    let projectsList = Model.getProjectsList();
+
+    for(let i = 0; i < projectsList.length; i++)
+    {
+        createProjectTab(projectsList[i].name);
+    }
+}
+
 
 function createProjectTab(projectName)
 {
